@@ -23,7 +23,7 @@ class Board:
             ]
         )
         # 0 : 中立, 1 : 陣地,  2 : 城壁
-        self.board_territory_my = np.zeros((13, 13))
+        self.board_territory_ally = np.zeros((13, 13))
         self.board_territory_enemy = np.zeros(13, 13)
 
         # 0:空白, 1:味方エージェント, 2: 敵エージェント
