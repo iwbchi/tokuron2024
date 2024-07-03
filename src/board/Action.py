@@ -61,7 +61,10 @@ class Actions:
         """すべてのエージェントが過不足なくそろっているか確認"""
         result = False
         for i in range(4):
-            if len([action for action in self._lst if action.agent_id == i]) == 1:
+            if (
+                len([action for action in self._lst if action.agent_id == i])
+                == 1
+            ):
                 result = True
             else:
                 result = False
