@@ -1,6 +1,6 @@
 from enum import Enum
-from dataclasses import dataclass
 from typing import List, Iterator
+from board.Utils import Point
 
 
 class Direction(Enum):
@@ -22,14 +22,6 @@ class ActionType(Enum):
     MOVE = 1
     REMOVE = 2
     BUILD = 3
-
-
-@dataclass
-class Point:
-    """座標を管理する"""
-
-    x: int
-    y: int
 
 
 class Action:
