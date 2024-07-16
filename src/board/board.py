@@ -68,3 +68,10 @@ class Board:
                 Agent(4, Point(6, 8)),
             ],
         )
+    
+    def score(self, agent_type: AgentType):
+        if agent_type == AgentType.ally:
+            territory = self.board_territory_ally.copy()
+        else:
+            return self.agents_enemy.score
+
