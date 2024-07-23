@@ -1,8 +1,9 @@
 # 盤面情報
-import numpy as np
-from Agent import Agent, AgentType, Agents
-from Utils import Point
 from collections import deque
+
+import numpy as np
+from Agent import Agent, Agents, AgentType
+from Utils import Point
 
 territory = [
     [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
@@ -25,7 +26,7 @@ def make_grid_graph(territory):
             if territory[h][w] == 1:
                 continue
             for dx, dy in dl:
-                if not (0 <= w+dx < W) or not (0 <= h+dy < H):
+                if not (0 <= w+dx < W and 0 <= h+dy < H):
                     continue
                 tox, toy = w+dx, h+dy
                 if territory[toy][tox] == 0:
@@ -39,10 +40,10 @@ def make_grid_graph(territory):
 
 
 def bfs(graph, start):
-    H = len(territory)
     W = len(territory[0])
-    visited = [False] * (H*W+1)
+    H = len(territory)
     queue = deque([start])
+    visited = [False] * (H*W+1)
     visited[start] = True
 
     while queue:
@@ -57,8 +58,9 @@ def bfs(graph, start):
 
 if __name__ == "__main__":
     g = make_grid_graph(territory)
+    print(g)
     res = bfs(g, 80)
-    for i, r in enumerate(res):
+    for i, r in enumerate(res[:-1]):
         print(1 if r else 0, end=" ")
-        if i % 10 == 0:
+        if i % 10 == 9:
             print()
