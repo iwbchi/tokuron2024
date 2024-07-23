@@ -15,9 +15,7 @@ class Agent:
 
 
 class Agents:
-    def __init__(
-        self, agent_type: AgentType, agents: list[Agent] = list()
-    ) -> None:
+    def __init__(self, agent_type: AgentType, agents: list[Agent] = list()) -> None:
         self._lst: list[Agent] = agents
         self.agent_type = agent_type
 

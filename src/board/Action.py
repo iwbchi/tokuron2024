@@ -1,19 +1,6 @@
 from enum import Enum
 from typing import List, Iterator
-from board.Utils import Point
-
-
-class Direction(Enum):
-    """方向を管理する"""
-
-    N = 1
-    NE = 2
-    E = 3
-    SE = 4
-    S = 5
-    SW = 6
-    W = 7
-    NW = 8
+from board.Utils import Point, Direction
 
 
 class ActionType(Enum):
