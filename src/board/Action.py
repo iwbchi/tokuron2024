@@ -20,13 +20,11 @@ class Action:
         agent_id: int,
         direction: Direction,
         action_type: ActionType,
-        point: Point,
     ) -> None:
         assert 0 <= agent_id <= 3
         self.agent_id = agent_id
         self.direction = direction
         self.action_type = action_type
-        self.point = point
 
 
 class Actions:
