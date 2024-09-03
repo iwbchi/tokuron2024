@@ -1,4 +1,3 @@
-from Utils import Point
 from enum import Enum
 from typing import Iterator
 
@@ -23,6 +22,9 @@ class Agent:
 class Agents:
     """１つのチームのすべてのエージェントを管理する"""
     def __init__(self, agent_type: AgentType, points: list[Point]) -> None:
+        self._lst: list[Agent] = []
+        for i, point in enumerate(points):
+            self._lst.append(Agent(i, point))
         self.agent_type = agent_type
 
     def __len__(self) -> int:

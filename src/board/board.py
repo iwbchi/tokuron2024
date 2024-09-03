@@ -56,20 +56,22 @@ class Board:
 
         self.agents = {
             AgentType.ally: Agents(
+                AgentType.ally,
                 [
-                    Agent(0, Point(6, 1)),
-                    Agent(1, Point(4, 6)),
-                    Agent(2, Point(8, 6)),
-                    Agent(3, Point(6, 11)),
-                ]
+                    Point(6, 1),
+                    Point(4, 6),
+                    Point(8, 6),
+                    Point(6, 11),
+                ],
             ),
             AgentType.enemy: Agents(
+                AgentType.enemy,
                 [
-                    Agent(0, Point(6, 4)),
-                    Agent(1, Point(1, 6)),
-                    Agent(2, Point(11, 6)),
-                    Agent(3, Point(6, 8)),
-                ]
+                    Point(6, 4),
+                    Point(1, 6),
+                    Point(11, 6),
+                    Point(6, 8),
+                ],
             ),
         }
 
