@@ -13,7 +13,7 @@ class ActionType(Enum):
 
 
 class Action:
-    """エージェントの行動を管理する"""
+    """1つのエージェントの1つ行動を管理する"""
 
     def __init__(
         self,
@@ -30,6 +30,7 @@ class Action:
 
 
 class Actions:
+    """1チームのすべてのエージェントの行動を管理する"""
     def __init__(self, actions: List[Action] = list()) -> None:
         self._lst: List[Action] = actions
 

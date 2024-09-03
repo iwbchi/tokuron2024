@@ -11,14 +11,15 @@ class AgentType(Enum):
 
 
 class Agent:
+    """一人のエージェントを管理する"""
     def __init__(self, agent_id: int, point: Point) -> None:
         self.agent_id = agent_id
         self.point = point
 
 
 class Agents:
-    def __init__(self, agent_type: AgentType, agents: list[Agent] = list()) -> None:
-        self._lst: list[Agent] = agents
+    """１つのチームのすべてのエージェントを管理する"""
+    def __init__(self, agent_type: AgentType, points: list[Point]) -> None:
         self.agent_type = agent_type
 
     def __len__(self) -> int:
