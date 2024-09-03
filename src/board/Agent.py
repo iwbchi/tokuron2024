@@ -45,3 +45,27 @@ class Agents:
 
     def check(self) -> bool:
         return True
+
+
+if __name__ == "__main__":
+    agents = {
+        AgentType.ally: Agents(
+            AgentType.ally,
+            [
+                Point(6, 1),
+                Point(4, 6),
+                Point(8, 6),
+                Point(6, 11),
+            ],
+        ),
+        AgentType.enemy: Agents(
+            AgentType.enemy,
+            [
+                Point(6, 4),
+                Point(1, 6),
+                Point(11, 6),
+                Point(6, 8),
+            ],
+        ),
+    }
+    print(agents[AgentType.ally])

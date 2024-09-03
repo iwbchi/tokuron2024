@@ -95,28 +95,26 @@ class Board:
 
     def op_actions(self, actions: Actions, agent_type: AgentType):
 
-        ac_types = ActionType()
-
         for ac_type in [
-            ac_types.REMOVE,
-            ac_types.BUILD,
-            ac_types.MOVE,
+            ActionType.REMOVE,
+            ActionType.BUILD,
+            ActionType.MOVE,
         ]:  # 動作順番ごとに実行
             for action in actions:  # エージェント一人ずつ実行
 
                 agent_id = action.agent_id
                 direction = action.direction
-                point = action.point
+                point = self.agents[agent_type][agent_id].point
                 # ここまでやった
 
                 nx_point = next_point(point, direction)
-                if ac_type == ac_types.REMOVE:  # 動作が削除なら
+                if ac_type == ActionType.REMOVE:  # 動作が削除なら
                     if self.get_territory_ally(nx_point) == 2:
                         self.set_territory_ally(nx_point, 0)
                     elif self.get_territory_enemy(nx_point) == 2:
                         self.set_territory_enemy(nx_point, 0)
 
-                elif ac_type == ac_types.BUILD:  # 動作が建築なら
+                elif ac_type == ActionType.BUILD:  # 動作が建築なら
                     if agent_type == AgentType.ally:
                         if self.get_territory_ally(nx_point) == 0:
                             self.set_territory_ally(nx_point, 2)
@@ -124,12 +122,14 @@ class Board:
                         if self.get_territory_enemy(nx_point) == 0:
                             self.set_territory_enemy(nx_point, 2)
 
-                elif ac_type == ac_types.MOVE:  # 動作が移動なら
+                elif ac_type == ActionType.MOVE:  # 動作が移動なら
                     self.agents[agent_type][agent_id].point = nx_point
 
 
 if __name__ == "__main__":
-    actions = Actions([Action(i, Direction.N, ActionType.MOVE) for i in range(4)])
+    actions = Actions(
+        [Action(i, Direction.N, ActionType.MOVE) for i in range(4)]
+    )
     board = Board()
     board.op_actions(actions, AgentType.ally)
     print(board.agents)
