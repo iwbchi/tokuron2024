@@ -26,7 +26,7 @@ class Point:
         return f"({self.x}, {self.y})"
 
 
-def next_point(point, direction):
+def next_point(point: Point, direction: Direction) -> Point:
     """座標と動作方向から、次の座標を計算する"""
 
     if direction == Direction.N:
