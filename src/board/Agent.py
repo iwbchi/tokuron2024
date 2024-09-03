@@ -2,6 +2,8 @@ from Utils import Point
 from enum import Enum
 from typing import Iterator
 
+from Utils import Point
+
 
 class AgentType(Enum):
     ally = 1

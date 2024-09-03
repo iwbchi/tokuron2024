@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import List, Iterator
-from board.Utils import Point, Direction
+
+from Utils import Direction
 
 
 class ActionType(Enum):
