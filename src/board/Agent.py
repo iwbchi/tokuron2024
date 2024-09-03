@@ -16,6 +16,9 @@ class Agent:
         self.agent_id = agent_id
         self.point = point
 
+    def __str__(self) -> str:
+        return f"Agent {self.agent_id} : {self.point}"
+
 
 class Agents:
     """１つのチームのすべてのエージェントを管理する"""
@@ -30,6 +33,10 @@ class Agents:
 
     def __iter__(self) -> Iterator[Agent]:
         return iter(self._lst)
+
+    def __str__(self) -> str:
+        tmp = "\n".join(map(str, self._lst))
+        return f"{self.agent_type}:\n{tmp}"
 
     def append(self, agent: Agent) -> None:
         self._lst.append(agent)

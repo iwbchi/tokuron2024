@@ -22,6 +22,9 @@ class Point:
     x: int
     y: int
 
+    def __str__(self) -> str:
+        return f"({self.x}, {self.y})"
+
 
 def next_point(point, direction):
     """座標と動作方向から、次の座標を計算する"""
