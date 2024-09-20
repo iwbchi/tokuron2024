@@ -102,6 +102,10 @@ class Board:
         ]:  # 動作順番ごとに実行
             for action in actions:  # エージェント一人ずつ実行
 
+                # 優先動作とエージェント動作が合致しているか判定　合致していない場合はcontinue
+                if action.action_type != ac_type:
+                    continue
+
                 agent_id = action.agent_id
                 direction = action.direction
                 point = self.agents[agent_type][agent_id].point
@@ -109,12 +113,14 @@ class Board:
 
                 nx_point = next_point(point, direction)
                 if ac_type == ActionType.REMOVE:  # 動作が削除なら
+                    print(f"agent {agent_id} 削除")  # 動作確認用
                     if self.get_territory_ally(nx_point) == 2:
                         self.set_territory_ally(nx_point, 0)
                     elif self.get_territory_enemy(nx_point) == 2:
                         self.set_territory_enemy(nx_point, 0)
 
                 elif ac_type == ActionType.BUILD:  # 動作が建築なら
+                    print(f"agent {agent_id}' 建築")  # 動作確認用
                     if agent_type == AgentType.ally:
                         if self.get_territory_ally(nx_point) == 0:
                             self.set_territory_ally(nx_point, 2)
@@ -127,9 +133,14 @@ class Board:
 
 
 if __name__ == "__main__":
-    actions = Actions(
-        [Action(i, Direction.N, ActionType.MOVE) for i in range(4)]
-    )
+    actions = Actions([Action(i, Direction.S, ActionType.BUILD) for i in range(4)])
     board = Board()
     board.op_actions(actions, AgentType.ally)
-    print(board.agents)
+
+    print("Agent Point")
+    print(board.agents[AgentType.ally])
+    print(board.agents[AgentType.enemy])
+    print("board_territory_ally")
+    print(board.board_territory_ally)
+    print("board_territory_enemy")
+    print(board.board_territory_enemy)
