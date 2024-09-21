@@ -1,6 +1,6 @@
 # 盤面情報
 import numpy as np
-from Agent import Agent, AgentType, Agents
+from Agent import AgentType, Agents
 from Utils import Point, Direction, next_point
 from Action import Action, Actions, ActionType
 
@@ -84,6 +84,16 @@ class Board:
     def get_territory_enemy(self, point: Point):
         return self.board_territory_enemy[point.y][point.x]
 
+    def check_agent_position_overlap(self, point: Point) -> bool:
+        """指定した座標に何らかの動作をするとき、そこにエージェントがいるか判定
+        重複がある場合はFalse、ない場合はTrueを返す
+        """
+        for types in [AgentType.ally, AgentType.enemy]:  # 敵、味方すべて判定
+            for agent in self.agents[types]:
+                if agent.point == point:
+                    return False
+        return True
+
     def set_obj(self, point: Point, num):
         self.board_obj[point.y][point.x] = num
 
@@ -101,7 +111,6 @@ class Board:
             ActionType.MOVE,
         ]:  # 動作順番ごとに実行
             for action in actions:  # エージェント一人ずつ実行
-
                 # 優先動作とエージェント動作が合致しているか判定　合致していない場合はcontinue
                 if action.action_type != ac_type:
                     continue
@@ -109,31 +118,62 @@ class Board:
                 agent_id = action.agent_id
                 direction = action.direction
                 point = self.agents[agent_type][agent_id].point
-                # ここまでやった
 
-                nx_point = next_point(point, direction)
+                nx_point = next_point(point, direction)  # 動作を適用する座標
+
                 if ac_type == ActionType.REMOVE:  # 動作が削除なら
                     print(f"agent {agent_id} 削除")  # 動作確認用
+
                     if self.get_territory_ally(nx_point) == 2:
                         self.set_territory_ally(nx_point, 0)
+                        print("削除完了")
                     elif self.get_territory_enemy(nx_point) == 2:
                         self.set_territory_enemy(nx_point, 0)
+                        print("削除完了")
 
                 elif ac_type == ActionType.BUILD:  # 動作が建築なら
-                    print(f"agent {agent_id}' 建築")  # 動作確認用
+                    print(f"agent {agent_id} 建築")  # 動作確認用
+
                     if agent_type == AgentType.ally:
-                        if self.get_territory_ally(nx_point) == 0:
+                        if (
+                            self.get_territory_ally(nx_point) != 2
+                            and self.get_obj(nx_point) == 0
+                            and self.check_agent_position_overlap(nx_point)
+                        ):
                             self.set_territory_ally(nx_point, 2)
+                            print("建築完了")
                     elif agent_type == AgentType.enemy:
-                        if self.get_territory_enemy(nx_point) == 0:
+                        if (
+                            self.get_territory_enemy(nx_point) != 2
+                            and self.get_obj(nx_point) == 0
+                            and self.check_agent_position_overlap(nx_point)
+                        ):
                             self.set_territory_enemy(nx_point, 2)
+                            print("建築完了")
 
                 elif ac_type == ActionType.MOVE:  # 動作が移動なら
-                    self.agents[agent_type][agent_id].point = nx_point
+                    print(f"agent {agent_id} 移動")  # 動作確認用
+                    # 重複判定
+                    if (
+                        self.get_territory_ally(nx_point) == 0
+                        and self.get_territory_enemy(nx_point) == 0
+                        and self.get_obj(nx_point) == 0
+                        and self.check_agent_position_overlap(nx_point)
+                    ):
+                        self.agents[agent_type][agent_id].point = nx_point
+                        print("移動完了")
 
 
 if __name__ == "__main__":
-    actions = Actions([Action(i, Direction.S, ActionType.BUILD) for i in range(4)])
+    # actions = Actions([Action(i, Direction.W, ActionType.BUILD) for i in range(4)])
+    actions = Actions(
+        [
+            Action(0, Direction.N, ActionType.BUILD),
+            Action(1, Direction.S, ActionType.BUILD),
+            Action(2, Direction.N, ActionType.MOVE),
+            Action(3, Direction.S, ActionType.MOVE),
+        ]
+    )
     board = Board()
     board.op_actions(actions, AgentType.ally)
 
