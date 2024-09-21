@@ -15,6 +15,15 @@ class Direction(Enum):
     NW = 8
 
 
+class Only4Direction(Enum):
+    """方向を管理する"""
+
+    N = 1
+    E = 3
+    S = 5
+    W = 7
+
+
 @dataclass
 class Point:
     """座標を管理する"""
