@@ -161,7 +161,12 @@ class Board:
                 point = self.agents[agent_type][agent_id].point
 
                 nx_point = next_point(point, direction)  # 動作を適用する座標
-                if nx_point.x < 0 or nx_point.x >= 13 or nx_point.y < 0 or nx_point.y >= 13:
+                if (
+                    nx_point.x < 0
+                    or nx_point.x >= 13
+                    or nx_point.y < 0
+                    or nx_point.y >= 13
+                ):
                     continue
 
                 if ac_type == ActionType.REMOVE:  # 動作が削除なら
