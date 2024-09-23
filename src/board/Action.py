@@ -8,8 +8,8 @@ class ActionType(Enum):
     """行動の種類を管理する"""
 
     MOVE = 1
-    REMOVE = 2
-    BUILD = 3
+    BUILD = 2
+    REMOVE = 3
 
 
 class Action:
