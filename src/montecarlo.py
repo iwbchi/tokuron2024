@@ -44,7 +44,7 @@ def montecarlo_action(board: Board, turn: int, is_first: bool) -> Actions:
     #     results = list(executor.map(partial_socre_calc, actions_list))
     # max_actions = max(results)[1]
 
-    for actions in random.sample(actions_list, 100):
+    for actions in random.sample(actions_list, 900):
         score, actions = score_calc(
             board, turn, is_first, actions_list, actions
         )
