@@ -45,18 +45,16 @@ def api_request(id, token):
     if response.status_code == 200:
         response_data = response.json()
         # Retrieve match information
+
         match_id = response_data["id"]
         turns = response_data["turn"]
         board = response_data["board"]
-        walls = response_data["walls"]
-        territories = response_data["territories"]
 
         # Display board structures and masons as NumPy arrays
         structures = np.array(board["structures"])
         masons = np.array(board["masons"])
-
-        # 最新のターン番号を取得
-        current_turn = response_data.get("turn", None)
+        walls = np.array(board["walls"])
+        territories = np.array(board["territories"])
 
         print(f"Match ID: {match_id}")
         print(f"Total Turns: {turns}")
@@ -65,12 +63,19 @@ def api_request(id, token):
         print(f"territories: \n{territories}")
         print(f"walls: \n{walls}")
 
+        # 最新のターン番号を取得
+        current_turn = response_data.get("turn", None)
+
         if current_turn is not None:
             print(f"現在のターン: {current_turn}")
         else:
             print("ターン情報が見つかりませんでした。")
 
-        return masons, structures, turns
+        return masons, structures, turns, walls, territories
 
     else:
         print(f"Failed to get data: {response.status_code}")
+
+
+    def convert_op_action():
+        

@@ -5,14 +5,14 @@ from enum import Enum
 class Direction(Enum):
     """方向を管理する"""
 
-    N = 1
-    NE = 2
-    E = 3
-    SE = 4
-    S = 5
-    SW = 6
-    W = 7
-    NW = 8
+    N = 2
+    NE = 3
+    E = 4
+    SE = 5
+    S = 6
+    SW = 7
+    W = 8
+    NW = 1
 
 
 @dataclass
