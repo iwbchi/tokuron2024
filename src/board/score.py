@@ -1,20 +1,20 @@
 # 盤面情報
 from collections import deque
-
+from board import Board
 import numpy as np
-from Agent import Agent, Agents, AgentType
-from Utils import Point
 
-territory = [
-    [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-    [0, 0, 1, 1, 1, 0, 1, 0, 0, 0],
-    [0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
-    [0, 0, 1, 2, 0, 0, 1, 0, 0, 0],
-    [0, 0, 0, 1, 0, 0, 1, 0, 0, 0],
-    [0, 1, 1, 0, 0, 0, 1, 0, 0, 0],
-    [0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
-    [0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
-]
+
+# territory = [
+#     [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+#     [0, 0, 1, 1, 1, 0, 1, 0, 0, 0],
+#     [0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+#     [0, 0, 1, 2, 0, 0, 1, 0, 0, 0],
+#     [0, 0, 0, 1, 0, 0, 1, 0, 0, 0],
+#     [0, 1, 1, 0, 0, 0, 1, 0, 0, 0],
+#     [0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+#     [0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+# ]
+
 
 def make_grid_graph(territory):
     W = len(territory[0])
@@ -39,7 +39,7 @@ def make_grid_graph(territory):
     return graph
 
 
-def bfs(graph, start):
+def bfs(territory,graph, start):
     W = len(territory[0])
     H = len(territory)
     queue = deque([start])
@@ -56,27 +56,55 @@ def bfs(graph, start):
 
     return visited
 
-if __name__ == "__main__":
+
+
+def get_score(board:Board, is_ally:bool):
+    territory = None
+    # 0 : 中立,  2 : 城壁
+    if is_ally:
+        territory = board.board_territory_ally
+    else:
+        territory = board.board_territory_enemy
+    territory = np.where(territory==2,1,0)
+    # 0: 空白, 1: 堀, 2: 城
+    
+    for i in range(len(territory)):
+        for j in range(len(territory[0])):
+            if board.board_obj[i][j] == 0:
+                continue
+            territory[i][j] = board.board_obj[i][j]
+            
     g = make_grid_graph(territory)
     H = len(territory)
     W = len(territory[0])
     score = 0
-    print(g)
-    res = bfs(g, 80)
-    for i in range(H):
-        for j in range(W):
-            if not res[i*W+j] and territory[i][j] == 2:
-                score += 100
-            elif not res[i*W+j] and  territory[i][j] == 1:
-                score += 10
-            elif not res[i*W+j] :
-                score += 30
-            else:
-                score += 0
-    print(score)
-                
+    res = bfs(territory,g, H*W)
     # for i in range(H):
     #     for j in range(W):
     #         print(0 if res[i*W+j] else 1 ,end = " ")
     #     print()
+    for i in range(H):
+        for j in range(W):
+            # 堀ならスキップ
+            if board.board_obj[i][j] == 1:
+                continue
+            # 領域外ならスキップ
+            if res[i*W+j]:
+                continue
             
+            if territory[i][j] == 2:
+                score += 100
+            elif territory[i][j]== 1:
+                score += 10
+            else:
+                score += 30
+    return score
+
+        
+if __name__ == "__main__":
+    board = Board()
+    score = get_score(board,True)
+    print(score)
+                
+
+    
