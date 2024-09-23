@@ -21,16 +21,6 @@ def api_post(id, token, turn, type1, type2, type3, type4, dir1, dir2, dir3, dir4
         ],
     }
 
-    datas = {
-        "turn": 1,
-        "actions": [
-            {"type": 2, "dir": 2},
-            {"type": 2, "dir": 2},
-            {"type": 2, "dir": 2},
-            {"type": 2, "dir": 2},
-        ],
-    }
-
     # GETリクエストを送信
     response = requests.post(url, headers=headers, json=data)
 
@@ -65,6 +55,7 @@ def api_request(id, token):
         masons = np.array(board["masons"])
         walls = np.array(board["walls"])
         territories = np.array(board["territories"])
+        masons_point = np.argwhere(masons != 0)
 
         print(f"Match ID: {match_id}")
         print(f"Total Turns: {turns}")
@@ -72,6 +63,7 @@ def api_request(id, token):
         print(f"Masons: \n{masons}")
         print(f"territories: \n{territories}")
         print(f"walls: \n{walls}")
+        print(masons_point)
 
         # 最新のターン番号を取得
         current_turn = response_data.get("turn", None)

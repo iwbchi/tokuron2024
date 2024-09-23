@@ -1,15 +1,15 @@
 # 盤面情報
 import itertools
-
 import numpy as np
 from Agent import AgentType, Agents
 from Utils import Point, Direction, Only4Direction, next_point
 from Action import Action, Actions, ActionType
+from Utils import Point
 
 
 class Board:
 
-    def __init__(self, is_first=True):
+    def __init__(self, walls, masons):
         # 0: 空白, 1: 堀, 2: 城
         self.board_obj = np.array(
             [
@@ -53,33 +53,62 @@ class Board:
         )  # 0 : いない, 1 : 味方, 2 : 相手
         """
 
-        self._init_agents()
+        # self._init_agents()
+        self._init_board(walls, masons)
 
-    def _init_agents(self, is_first=True):
-        first_points = [
-            Point(6, 1),
-            Point(4, 6),
-            Point(8, 6),
-            Point(6, 11),
-        ]
+    def _init_board(self, walls, masons):
+        # walls の情報に基づいて board_territory_ally と board_territory_enemy を設定
+        for i in range(13):
+            for j in range(13):
+                if walls[i][j] == 0:  # なし
+                    self.board_territory_ally[i][j] = 0
+                    self.board_territory_enemy[i][j] = 0
+                elif walls[i][j] == 1:  # 自チームの城壁
+                    self.board_territory_ally[i][j] = 2
+                elif walls[i][j] == 2:  # 相手チームの城壁
+                    self.board_territory_enemy[i][j] = 2
 
-        second_points = [
-            Point(6, 4),
-            Point(1, 6),
-            Point(11, 6),
-            Point(6, 8),
-        ]
+        # masons の情報に基づいてエージェントの初期位置を設定
+        self.agents = {AgentType.ally: [], AgentType.enemy: []}
+        points = {AgentType.ally: [], AgentType.enemy: []}
+        for i in range(13):
+            for j in range(13):
+                if masons[i][j] > 0:  # 正の値は自チームのエージェント
+                    points[AgentType.ally].append(Point(j, i))
+                elif masons[i][j] < 0:  # 負の値は相手チームのエージェント
+                    points[AgentType.enemy].append(Point(j, i))
 
-        if is_first:
-            self.agents = {
-                AgentType.ally: Agents(AgentType.ally, first_points),
-                AgentType.enemy: Agents(AgentType.enemy, second_points),
-            }
-        else:
-            self.agents = {
-                AgentType.ally: Agents(AgentType.ally, second_points),
-                AgentType.enemy: Agents(AgentType.enemy, first_points),
-            }
+        # キモイけどこれでいいみたい
+        self.agents = {
+            AgentType.ally: Agents(AgentType.ally, points[AgentType.ally]),
+            AgentType.enemy: Agents(AgentType.enemy, points[AgentType.enemy]),
+        }
+
+    #def _init_agents(self, is_first=True):
+    #    first_points = [
+    #        Point(6, 1),
+    #        Point(4, 6),
+    #        Point(8, 6),
+    #        Point(6, 11),
+    #    ]
+#
+    #    second_points = [
+    #        Point(6, 4),
+    #        Point(1, 6),
+    #        Point(11, 6),
+    #        Point(6, 8),
+    #    ]
+#
+    #    if is_first:
+    #        self.agents = {
+    #            AgentType.ally: Agents(AgentType.ally, first_points),
+    #            AgentType.enemy: Agents(AgentType.enemy, second_points),
+    #        }
+    #    else:
+    #        self.agents = {
+    #            AgentType.ally: Agents(AgentType.ally, second_points),
+    #            AgentType.enemy: Agents(AgentType.enemy, first_points),
+    #        }
 
     def __str__(self):
         """ボードの状態を文字列で返す"""
