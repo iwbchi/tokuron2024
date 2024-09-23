@@ -9,7 +9,7 @@ from Action import Action, Actions, ActionType
 
 class Board:
 
-    def __init__(self):
+    def __init__(self, is_first=True):
         # 0: 空白, 1: 堀, 2: 城
         self.board_obj = np.array(
             [
@@ -55,28 +55,31 @@ class Board:
 
         self._init_agents()
 
-    def _init_agents(self):
+    def _init_agents(self, is_first=True):
+        first_points = [
+            Point(6, 1),
+            Point(4, 6),
+            Point(8, 6),
+            Point(6, 11),
+        ]
 
-        self.agents = {
-            AgentType.ally: Agents(
-                AgentType.ally,
-                [
-                    Point(6, 1),
-                    Point(4, 6),
-                    Point(8, 6),
-                    Point(6, 11),
-                ],
-            ),
-            AgentType.enemy: Agents(
-                AgentType.enemy,
-                [
-                    Point(6, 4),
-                    Point(1, 6),
-                    Point(11, 6),
-                    Point(6, 8),
-                ],
-            ),
-        }
+        second_points = [
+            Point(6, 4),
+            Point(1, 6),
+            Point(11, 6),
+            Point(6, 8),
+        ]
+
+        if is_first:
+            self.agents = {
+                AgentType.ally: Agents(AgentType.ally, first_points),
+                AgentType.enemy: Agents(AgentType.enemy, second_points),
+            }
+        else:
+            self.agents = {
+                AgentType.ally: Agents(AgentType.ally, second_points),
+                AgentType.enemy: Agents(AgentType.enemy, first_points),
+            }
 
     def __str__(self):
         """ボードの状態を文字列で返す"""
@@ -158,6 +161,8 @@ class Board:
                 point = self.agents[agent_type][agent_id].point
 
                 nx_point = next_point(point, direction)  # 動作を適用する座標
+                if nx_point.x < 0 or nx_point.x >= 13 or nx_point.y < 0 or nx_point.y >= 13:
+                    continue
 
                 if ac_type == ActionType.REMOVE:  # 動作が削除なら
                     # print(f"agent {agent_id} 削除")  # 動作確認用
