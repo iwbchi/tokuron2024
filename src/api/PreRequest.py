@@ -1,51 +1,55 @@
 import requests
 import numpy as np
 
-url = "http://localhost:8080/matches?token=aaa"  # token = 試合で自グループに割り当てられたtoken
 
-# ヘッダーの設定
-headers = {
-    "procon-token": "{admin_token}",  # admin_tokenの部分は実際のトークンに置き換える admin server token
-}
+def pre_request() -> tuple[int, bool]:
 
+    url = "http://localhost:8080/matches?token=aaa"  # token = 試合で自グループに割り当てられたtoken
 
-# GETリクエストを送信
-response = requests.get(url, headers=headers)
+    # ヘッダーの設定
+    headers = {
+        "procon-token": "{admin_token}",  # admin_tokenの部分は実際のトークンに置き換える admin server token
+    }
 
-# ステータスコードを表示
-# print(f"Status Code: {response.status_code}")
+    # GETリクエストを送信
+    response = requests.get(url, headers=headers)
 
-# JSONレスポンスをPythonの辞書形式に変換
-if response.status_code == 200:
-    response_data = response.json()
+    # ステータスコードを表示
+    # print(f"Status Code: {response.status_code}")
 
-    # matchesのデータを取り出す
-    matches = response_data.get("matches", [])
+    # JSONレスポンスをPythonの辞書形式に変換
+    if response.status_code == 200:
+        response_data = response.json()
 
-    for match in matches:
-        match_id = match["id"]
-        turns = match["turns"]
-        turn_seconds = match["turnSeconds"]
-        bonus = match["bonus"]
-        board = match["board"]
-        opponent = match["opponent"]
-        first = match["first"]
+        # matchesのデータを取り出す
+        matches = response_data.get("matches", [])
 
-        # Board情報の取得
-        structures = board["structures"]
-        masons = board["masons"]
+        for match in matches:
+            match_id = match["id"]
+            turns = match["turns"]
+            turn_seconds = match["turnSeconds"]
+            bonus = match["bonus"]
+            board = match["board"]
+            opponent = match["opponent"]
+            first = match["first"]
 
-        # NumPy配列に変換
-        structures_np = np.array(structures)
-        masons_np = np.array(masons)
+            # Board情報の取得
+            structures = board["structures"]
+            masons = board["masons"]
 
-        # NumPy配列を表示
+            # NumPy配列に変換
+            structures_np = np.array(structures)
+            masons_np = np.array(masons)
 
-        print(f"Structures (NumPy): \n{structures_np}")
-        print(f"Masons (NumPy): \n{masons_np}")
-        print(f"id:  {match_id}")
-        print(f"turn: {turns}")
-        print(first)
+            # NumPy配列を表示
 
-else:
-    print(f"Failed to get data: {response.status_code}")
+            print(f"Structures (NumPy): \n{structures_np}")
+            print(f"Masons (NumPy): \n{masons_np}")
+            print(f"id:  {match_id}")
+            print(f"turn: {turns}")
+            print(first)
+
+    else:
+        print(f"Failed to get data: {response.status_code}")
+
+    return id, first
