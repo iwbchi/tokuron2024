@@ -65,6 +65,7 @@ def api_request(id, token):
         masons = np.array(board["masons"])
         walls = np.array(board["walls"])
         territories = np.array(board["territories"])
+        masons_point = np.argwhere(masons != 0)
 
         print(f"Match ID: {match_id}")
         print(f"Total Turns: {turns}")
@@ -72,6 +73,7 @@ def api_request(id, token):
         print(f"Masons: \n{masons}")
         print(f"territories: \n{territories}")
         print(f"walls: \n{walls}")
+        print(masons_point)
 
         # 最新のターン番号を取得
         current_turn = response_data.get("turn", None)
