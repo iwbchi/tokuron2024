@@ -1,5 +1,7 @@
 import copy
 import random
+from concurrent.futures import ProcessPoolExecutor
+from functools import partial
 
 from Board import Board
 from Agent import AgentType
@@ -8,10 +10,26 @@ import score
 from tqdm.auto import tqdm
 
 
+def score_calc(
+    board: Board,
+    turn: int,
+    is_first: bool,
+    actions: Actions,
+    actions_list: list[Actions],
+) -> tuple[float, Actions]:
+    nxt_board = copy.deepcopy(board)
+    nxt_board.op_actions(actions, AgentType.ally)
+    score = playout(nxt_board, 10, turn, is_first, actions_list)
+
+    return score, actions
+
+
 def montecarlo_action(board: Board, turn: int, is_first: bool) -> Actions:
     max_score: float = 0
     max_actions = None
     actions_list = board.get_actions_list()
+    with ProcessPoolExecutor as executor:
+        results = list(executor.map())
     for actions in tqdm(actions_list):
         nxt_board = copy.deepcopy(board)
         nxt_board.op_actions(actions, AgentType.ally)

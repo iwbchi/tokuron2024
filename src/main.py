@@ -8,24 +8,25 @@ from board.montecarlo import montecarlo_action
 from actions_api import post_actions
 
 
-TOKEN = "aaa"
+TOKEN = "0"
 
 
 def main() -> None:
     id, is_first = pre_request()
 
-    board = Board(is_first)
     mod = 0 if is_first else 1
 
     for turn in range(30):
         # TODO api_requestがboardを返すようにする
         while True:
-            agents, _, get_turn, walls, territories = api.api_request(
+            masons, _, get_turn, walls, territories = api.api_request(
                 id, TOKEN
             )
             if turn == get_turn:
                 break
             time.sleep(1)
+            board = Board(walls, masons)
+
         if turn % 2 == mod:
             # 自分のターンの時
             actions = montecarlo_action(board, turn + 1, is_first)
