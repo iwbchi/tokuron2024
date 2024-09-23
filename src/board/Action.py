@@ -1,19 +1,7 @@
 from enum import Enum
 from typing import List, Iterator
-from board.Utils import Point
 
-
-class Direction(Enum):
-    """方向を管理する"""
-
-    N = 1
-    NE = 2
-    E = 3
-    SE = 4
-    S = 5
-    SW = 6
-    W = 7
-    NW = 8
+from Utils import Direction
 
 
 class ActionType(Enum):
@@ -25,23 +13,22 @@ class ActionType(Enum):
 
 
 class Action:
-    """エージェントの行動を管理する"""
+    """1つのエージェントの1つ行動を管理する"""
 
     def __init__(
         self,
         agent_id: int,
         direction: Direction,
         action_type: ActionType,
-        point: Point,
     ) -> None:
         assert 0 <= agent_id <= 3
         self.agent_id = agent_id
         self.direction = direction
         self.action_type = action_type
-        self.point = point
 
 
 class Actions:
+    """1チームのすべてのエージェントの行動を管理する"""
     def __init__(self, actions: List[Action] = list()) -> None:
         self._lst: List[Action] = actions
 
