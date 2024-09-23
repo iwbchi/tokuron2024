@@ -2,7 +2,9 @@ import requests
 import numpy as np
 
 
-def api_post(id, token, turn, type1, type2, type3, type4, dir1, dir2, dir3, dir4):
+def api_post(
+    id, token, turn, type1, type2, type3, type4, dir1, dir2, dir3, dir4
+):
     url = f"http://localhost:8080/matches/{id}?token={token}"  # token = 試合で自グループに割り当てられたtoken
 
     # ヘッダーの設定
@@ -20,11 +22,13 @@ def api_post(id, token, turn, type1, type2, type3, type4, dir1, dir2, dir3, dir4
             {"type": type4, "dir": dir4},
         ],
     }
+    print(data)
 
     # GETリクエストを送信
     response = requests.post(url, headers=headers, json=data)
 
     print(response.json())
+    print("おくったお")
 
 
 def api_request(id, token):
@@ -57,13 +61,13 @@ def api_request(id, token):
         territories = np.array(board["territories"])
         masons_point = np.argwhere(masons != 0)
 
-        print(f"Match ID: {match_id}")
-        print(f"Total Turns: {turns}")
-        print(f"Structures: \n{structures}")
-        print(f"Masons: \n{masons}")
-        print(f"territories: \n{territories}")
-        print(f"walls: \n{walls}")
-        print(masons_point)
+        # print(f"Match ID: {match_id}")
+        # print(f"Total Turns: {turns}")
+        # print(f"Structures: \n{structures}")
+        # print(f"Masons: \n{masons}")
+        # print(f"territories: \n{territories}")
+        # print(f"walls: \n{walls}")
+        # print(masons_point)
 
         # 最新のターン番号を取得
         current_turn = response_data.get("turn", None)
@@ -78,4 +82,4 @@ def api_request(id, token):
     else:
         print(f"Failed to get data: {response.status_code}")
 
-    #def convert_op_action():
+    # def convert_op_action():

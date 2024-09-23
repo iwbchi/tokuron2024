@@ -2,9 +2,9 @@ import requests
 import numpy as np
 
 
-def pre_request() -> tuple[int, bool]:
+def pre_request(token) -> tuple[int, bool]:
 
-    url = "http://localhost:8080/matches?token=aaa"  # token = 試合で自グループに割り当てられたtoken
+    url = f"http://localhost:8080/matches?token={token}"  # token = 試合で自グループに割り当てられたtoken
 
     # ヘッダーの設定
     headers = {
@@ -18,6 +18,8 @@ def pre_request() -> tuple[int, bool]:
     # print(f"Status Code: {response.status_code}")
 
     # JSONレスポンスをPythonの辞書形式に変換
+    match_id = 0
+    first = True
     if response.status_code == 200:
         response_data = response.json()
 
@@ -52,4 +54,4 @@ def pre_request() -> tuple[int, bool]:
     else:
         print(f"Failed to get data: {response.status_code}")
 
-    return id, first
+    return match_id, first

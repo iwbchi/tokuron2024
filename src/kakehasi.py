@@ -1,5 +1,5 @@
-from board.Board import Board
-from api.app import api_post, api_request
+from Board import Board
+from app import api_post, api_request
 
 
 def kakehasi(id, token):

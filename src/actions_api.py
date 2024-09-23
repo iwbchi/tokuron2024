@@ -1,5 +1,5 @@
-from api.app import api_post
-from board.Action import Actions
+from app import api_post
+from Action import Actions
 
 
 def post_actions(id: int, token: str, turn: int, actions: Actions) -> None:

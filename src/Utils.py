@@ -18,10 +18,10 @@ class Direction(Enum):
 class Only4Direction(Enum):
     """方向を管理する"""
 
-    N = 1
-    E = 3
-    S = 5
-    W = 7
+    N = 2
+    E = 4
+    S = 6
+    W = 8
 
 
 @dataclass
@@ -54,5 +54,14 @@ def next_point(point: Point, direction: Direction) -> Point:
         return Point(point.x - 1, point.y)
     elif direction == Direction.NW:
         return Point(point.x - 1, point.y - 1)
+
+    elif direction == Only4Direction.N:
+        return Point(point.x, point.y - 1)
+    elif direction == Only4Direction.E:
+        return Point(point.x + 1, point.y)
+    elif direction == Only4Direction.S:
+        return Point(point.x, point.y + 1)
+    elif direction == Only4Direction.W:
+        return Point(point.x - 1, point.y)
     else:
         return point

@@ -68,15 +68,26 @@ class Board:
                 elif walls[i][j] == 2:  # 相手チームの城壁
                     self.board_territory_enemy[i][j] = 2
 
-        # masons の情報に基づいてエージェントの初期位置を設定
-        self.agents = {AgentType.ally: [], AgentType.enemy: []}
-        points = {AgentType.ally: [], AgentType.enemy: []}
+        # # masons の情報に基づいてエージェントの初期位置を設定
+        # self.agents = {AgentType.ally: [], AgentType.enemy: []}
+        # points = {AgentType.ally: [], AgentType.enemy: []}
+        # for i in range(13):
+        #     for j in range(13):
+        #         if masons[i][j] > 0:  # 正の値は自チームのエージェント
+        #             points[AgentType.ally].append(Point(j, i))
+        #         elif masons[i][j] < 0:  # 負の値は相手チームのエージェント
+        #             points[AgentType.enemy].append(Point(j, i))
+        points = {AgentType.ally: [0] * 4, AgentType.enemy: [0]*4}
         for i in range(13):
             for j in range(13):
                 if masons[i][j] > 0:  # 正の値は自チームのエージェント
-                    points[AgentType.ally].append(Point(j, i))
+                    agent_id = masons[i][j] - 1  # 1-indexedを0-indexedに変換
+                    points[AgentType.ally][agent_id] = Point(j, i)
                 elif masons[i][j] < 0:  # 負の値は相手チームのエージェント
-                    points[AgentType.enemy].append(Point(j, i))
+                    agent_id = (
+                        abs(masons[i][j]) - 1
+                    )  # 1-indexedを0-indexedに変換
+                    points[AgentType.enemy][agent_id] = Point(j, i)
 
         # キモイけどこれでいいみたい
         self.agents = {
@@ -84,21 +95,21 @@ class Board:
             AgentType.enemy: Agents(AgentType.enemy, points[AgentType.enemy]),
         }
 
-    #def _init_agents(self, is_first=True):
+    # def _init_agents(self, is_first=True):
     #    first_points = [
     #        Point(6, 1),
     #        Point(4, 6),
     #        Point(8, 6),
     #        Point(6, 11),
     #    ]
-#
+    #
     #    second_points = [
     #        Point(6, 4),
     #        Point(1, 6),
     #        Point(11, 6),
     #        Point(6, 8),
     #    ]
-#
+    #
     #    if is_first:
     #        self.agents = {
     #            AgentType.ally: Agents(AgentType.ally, first_points),
@@ -133,9 +144,9 @@ class Board:
                 elif self.board_territory_enemy[i][j] == 2:
                     res_board[i][j] = f"{RED}壁{END}"
         for agent in self.agents[AgentType.ally]:
-            res_board[agent.point.y][agent.point.x] = f"{BLUE}人{END}"
+            res_board[agent.point.y][agent.point.x] = f"{BLUE}{agent.agent_id:02}{END}"
         for agent in self.agents[AgentType.enemy]:
-            res_board[agent.point.y][agent.point.x] = f"{RED}人{END}"
+            res_board[agent.point.y][agent.point.x] = f"{RED}{agent.agent_id:02}{END}"
         res = "\n".join(
             map(
                 lambda x: " ".join(x),
@@ -276,22 +287,223 @@ class Board:
 
 
 if __name__ == "__main__":
-    board = Board()
+    walls = np.zeros((13, 13))
+    masons = np.array(
+        [
+            [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                -1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+            ],
+            [
+                0,
+                -2,
+                0,
+                0,
+                2,
+                0,
+                0,
+                0,
+                3,
+                0,
+                0,
+                -3,
+                0,
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                -4,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                4,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+            ],
+            [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+            ],
+        ]
+    )
+
+    board = Board(walls, masons)
     # for actions in board.get_actions_list():
     #     print(actions)
     print(len(board.get_actions_list()))
     # actions = Actions([Action(i, Direction.W, ActionType.BUILD) for i in range(4)])
-    # actions = Actions(
-    #     [
-    #         Action(0, Direction.N, ActionType.BUILD),
-    #         Action(1, Direction.S, ActionType.BUILD),
-    #         Action(2, Direction.N, ActionType.MOVE),
-    #         Action(3, Direction.S, ActionType.MOVE),
-    #     ]
-    # )
+    actions = Actions(
+        [
+            Action(0, Direction.N, ActionType.BUILD),
+            Action(1, Direction.S, ActionType.BUILD),
+            Action(2, Direction.N, ActionType.MOVE),
+            Action(3, Direction.S, ActionType.MOVE),
+        ]
+    )
     # board = Board()
     # board.get_legal_actions(AgentType.ally)
-    # board.op_actions(actions, AgentType.ally)
+    board.op_actions(actions, AgentType.ally)
 
     # print("Agent Point")
     # print(board.agents[AgentType.ally])
