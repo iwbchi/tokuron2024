@@ -29,7 +29,7 @@ class Board:
             ]
         )
         # 0 : 中立,  2 : 城壁
-        self.board_territory_ally= np.zeros((13, 13))
+        self.board_territory_ally = np.zeros((13, 13))
         self.board_territory_enemy = np.zeros((13, 13))
 
         # 0:空白, 1:味方エージェント, 2: 敵エージェント
@@ -68,7 +68,7 @@ class Board:
                 ],
             ),
             AgentType.enemy: Agents(
-                AgentType. enemy,
+                AgentType.enemy,
                 [
                     Point(6, 4),
                     Point(1, 6),
@@ -208,23 +208,39 @@ class Board:
         remove = [(ActionType.REMOVE, dir) for dir in Only4Direction]
         build = [(ActionType.BUILD, dir) for dir in Only4Direction]
         move = [(ActionType.MOVE, dir) for dir in Direction]
-        for action in itertools.product(
-            *[
-                [
-                    Action(id, ac[1], ac[0])
-                    for ac in itertools.chain(remove, build, move)
-                ]
-                for id in range(4)
-            ]
-        ):
-            actions = Actions(action)
-            yield actions
+        return list(
+            map(
+                Actions,
+                itertools.product(
+                    *[
+                        [
+                            Action(id, ac[1], ac[0])
+                            for ac in itertools.chain(remove, build, move)
+                        ]
+                        for id in range(4)
+                    ]
+                ),
+            )
+        )
+
+    def isDone(self):
+        for i in range(13):
+            for j in range(13):
+                if (
+                    self.board_obj[i][j] == 0
+                    or self.board_territory_ally[i][j] == 0
+                    or self.board_territory_enemy[i][j] == 0
+                ):
+                    return False
+
+        return True
 
 
 if __name__ == "__main__":
     board = Board()
-    for actions in board.get_actions_list(AgentType.ally):
-        print(actions)
+    # for actions in board.get_actions_list():
+    #     print(actions)
+    print(len(board.get_actions_list()))
     # actions = Actions([Action(i, Direction.W, ActionType.BUILD) for i in range(4)])
     # actions = Actions(
     #     [
@@ -246,17 +262,4 @@ if __name__ == "__main__":
     # print("board_territory_enemy")
     # print(board.board_territory_enemy)
 
-
     print(board)
-
-
-    def isDone(self):
-        for i in range(13):
-            for j in range(13):
-                if self.board_obj[i][j] == 0 \
-                or self.board_territory_ally[i][j] == 0 \
-                or self.board_territory_enemy[i][j] == 0:
-                    return False
-                
-        return True
-
