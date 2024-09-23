@@ -1,7 +1,7 @@
 import requests
 import numpy as np
 
-url = "http://localhost:8080/matches?token=0"  # token = 試合で自グループに割り当てられたtoken
+url = "http://localhost:8080/matches?token=aaa"  # token = 試合で自グループに割り当てられたtoken
 
 # ヘッダーの設定
 headers = {
@@ -40,10 +40,12 @@ if response.status_code == 200:
         masons_np = np.array(masons)
 
         # NumPy配列を表示
-        print(f"id:  {match_id}")
-        print(f"turn: {turns}")
+
         print(f"Structures (NumPy): \n{structures_np}")
         print(f"Masons (NumPy): \n{masons_np}")
+        print(f"id:  {match_id}")
+        print(f"turn: {turns}")
+        print(first)
 
 else:
     print(f"Failed to get data: {response.status_code}")
