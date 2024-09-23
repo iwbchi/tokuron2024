@@ -1,7 +1,9 @@
 # 盤面情報
+import itertools
+
 import numpy as np
 from Agent import AgentType, Agents
-from Utils import Point, Direction, next_point
+from Utils import Point, Direction, Only4Direction, next_point
 from Action import Action, Actions, ActionType
 
 
@@ -163,24 +165,47 @@ class Board:
                         self.agents[agent_type][agent_id].point = nx_point
                         print("移動完了")
 
+    def check_in_board(self, point: Point):
+        return 0 <= point.x < 13 and 0 <= point.y < 13
+
+    def get_actions_list(self):
+        remove = [(ActionType.REMOVE, dir) for dir in Only4Direction]
+        build = [(ActionType.BUILD, dir) for dir in Only4Direction]
+        move = [(ActionType.MOVE, dir) for dir in Direction]
+        for action in itertools.product(
+            *[
+                [
+                    Action(id, ac[1], ac[0])
+                    for ac in itertools.chain(remove, build, move)
+                ]
+                for id in range(4)
+            ]
+        ):
+            actions = Actions(action)
+            yield actions
+
 
 if __name__ == "__main__":
-    # actions = Actions([Action(i, Direction.W, ActionType.BUILD) for i in range(4)])
-    actions = Actions(
-        [
-            Action(0, Direction.N, ActionType.BUILD),
-            Action(1, Direction.S, ActionType.BUILD),
-            Action(2, Direction.N, ActionType.MOVE),
-            Action(3, Direction.S, ActionType.MOVE),
-        ]
-    )
     board = Board()
-    board.op_actions(actions, AgentType.ally)
+    for actions in board.get_actions_list(AgentType.ally):
+        print(actions)
+    # actions = Actions([Action(i, Direction.W, ActionType.BUILD) for i in range(4)])
+    # actions = Actions(
+    #     [
+    #         Action(0, Direction.N, ActionType.BUILD),
+    #         Action(1, Direction.S, ActionType.BUILD),
+    #         Action(2, Direction.N, ActionType.MOVE),
+    #         Action(3, Direction.S, ActionType.MOVE),
+    #     ]
+    # )
+    # board = Board()
+    # board.get_legal_actions(AgentType.ally)
+    # board.op_actions(actions, AgentType.ally)
 
-    print("Agent Point")
-    print(board.agents[AgentType.ally])
-    print(board.agents[AgentType.enemy])
-    print("board_territory_ally")
-    print(board.board_territory_ally)
-    print("board_territory_enemy")
-    print(board.board_territory_enemy)
+    # print("Agent Point")
+    # print(board.agents[AgentType.ally])
+    # print(board.agents[AgentType.enemy])
+    # print("board_territory_ally")
+    # print(board.board_territory_ally)
+    # print("board_territory_enemy")
+    # print(board.board_territory_enemy)
