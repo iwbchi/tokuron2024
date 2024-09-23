@@ -6,6 +6,7 @@ from Action import Action, Actions, ActionType
 
 
 class Board:
+
     def __init__(self):
         # 0: 空白, 1: 堀, 2: 城
         self.board_obj = np.array(
@@ -75,6 +76,40 @@ class Board:
             ),
         }
 
+    def __str__(self):
+        """ボードの状態を文字列で返す"""
+        BLUE = "\033[34m"
+        RED = "\033[31m"
+        END = "\033[0m"
+        res_board = [["" for _ in range(13)] for _ in range(13)]
+        for i in range(13):
+            for j in range(13):
+                if self.board_obj[i][j] == 0:
+                    res_board[i][j] = "口"
+                elif self.board_obj[i][j] == 1:
+                    res_board[i][j] = "堀"
+                elif self.board_obj[i][j] == 2:
+                    res_board[i][j] = "城"
+                if self.board_territory_ally[i][j] == 1:
+                    res_board[i][j] = f"{BLUE}{res_board[i][j]}{END}"
+                elif self.board_territory_ally[i][j] == 2:
+                    res_board[i][j] = f"{BLUE}壁{END}"
+                if self.board_territory_enemy[i][j] == 1:
+                    res_board[i][j] = f"{RED}{res_board[i][j]}{END}"
+                elif self.board_territory_enemy[i][j] == 2:
+                    res_board[i][j] = f"{RED}壁{END}"
+        for agent in self.agents[AgentType.ally]:
+            res_board[agent.point.y][agent.point.x] = f"{BLUE}人{END}"
+        for agent in self.agents[AgentType.enemy]:
+            res_board[agent.point.y][agent.point.x] = f"{RED}人{END}"
+        res = "\n".join(
+            map(
+                lambda x: " ".join(x),
+                res_board,
+            )
+        )
+        return res
+
     def get_obj(self, point: Point):
         return self.board_obj[point.y][point.x]
 
@@ -122,17 +157,17 @@ class Board:
                 nx_point = next_point(point, direction)  # 動作を適用する座標
 
                 if ac_type == ActionType.REMOVE:  # 動作が削除なら
-                    print(f"agent {agent_id} 削除")  # 動作確認用
+                    # print(f"agent {agent_id} 削除")  # 動作確認用
 
                     if self.get_territory_ally(nx_point) == 2:
                         self.set_territory_ally(nx_point, 0)
-                        print("削除完了")
+                        # print("削除完了")
                     elif self.get_territory_enemy(nx_point) == 2:
                         self.set_territory_enemy(nx_point, 0)
-                        print("削除完了")
+                        # print("削除完了")
 
                 elif ac_type == ActionType.BUILD:  # 動作が建築なら
-                    print(f"agent {agent_id} 建築")  # 動作確認用
+                    # print(f"agent {agent_id} 建築")  # 動作確認用
 
                     if agent_type == AgentType.ally:
                         if (
@@ -141,7 +176,7 @@ class Board:
                             and self.check_agent_position_overlap(nx_point)
                         ):
                             self.set_territory_ally(nx_point, 2)
-                            print("建築完了")
+                            # print("建築完了")
                     elif agent_type == AgentType.enemy:
                         if (
                             self.get_territory_enemy(nx_point) != 2
@@ -149,10 +184,10 @@ class Board:
                             and self.check_agent_position_overlap(nx_point)
                         ):
                             self.set_territory_enemy(nx_point, 2)
-                            print("建築完了")
+                            # print("建築完了")
 
                 elif ac_type == ActionType.MOVE:  # 動作が移動なら
-                    print(f"agent {agent_id} 移動")  # 動作確認用
+                    # print(f"agent {agent_id} 移動")  # 動作確認用
                     # 重複判定
                     if (
                         self.get_territory_ally(nx_point) == 0
@@ -161,21 +196,24 @@ class Board:
                         and self.check_agent_position_overlap(nx_point)
                     ):
                         self.agents[agent_type][agent_id].point = nx_point
-                        print("移動完了")
+                        # print("移動完了")
 
 
 if __name__ == "__main__":
     # actions = Actions([Action(i, Direction.W, ActionType.BUILD) for i in range(4)])
     actions = Actions(
         [
-            Action(0, Direction.N, ActionType.BUILD),
-            Action(1, Direction.S, ActionType.BUILD),
+            Action(0, Direction.E, ActionType.BUILD),
+            Action(1, Direction.W, ActionType.BUILD),
             Action(2, Direction.N, ActionType.MOVE),
             Action(3, Direction.S, ActionType.MOVE),
         ]
     )
     board = Board()
+
+    print(board)
     board.op_actions(actions, AgentType.ally)
+    print(board)
 
     print("Agent Point")
     print(board.agents[AgentType.ally])
@@ -184,3 +222,5 @@ if __name__ == "__main__":
     print(board.board_territory_ally)
     print("board_territory_enemy")
     print(board.board_territory_enemy)
+
+    print(board)
