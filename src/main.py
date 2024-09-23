@@ -20,13 +20,15 @@ def main() -> None:
     for turn in range(30):
         # TODO api_requestがboardを返すようにする
         while True:
-            agents, _, get_turn, walls, territories = api.api_request(id, TOKEN)
+            agents, _, get_turn, walls, territories = api.api_request(
+                id, TOKEN
+            )
             if turn == get_turn:
                 break
             time.sleep(1)
         if turn % 2 == mod:
             # 自分のターンの時
-            actions = montecarlo_action(board, turn+1, is_first)
+            actions = montecarlo_action(board, turn + 1, is_first)
             post_actions(id, TOKEN, actions)
         else:
             # 相手のターンの時
