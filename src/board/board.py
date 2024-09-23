@@ -28,8 +28,8 @@ class Board:
                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             ]
         )
-        # 0 : 中立, 1 : 陣地,  2 : 城壁
-        self.board_territory_ally = np.zeros((13, 13))
+        # 0 : 中立,  2 : 城壁
+        self.board_territory_ally= np.zeros((13, 13))
         self.board_territory_enemy = np.zeros((13, 13))
 
         # 0:空白, 1:味方エージェント, 2: 敵エージェント
@@ -68,7 +68,7 @@ class Board:
                 ],
             ),
             AgentType.enemy: Agents(
-                AgentType.enemy,
+                AgentType. enemy,
                 [
                     Point(6, 4),
                     Point(1, 6),
@@ -110,6 +110,7 @@ class Board:
                 res_board,
             )
         )
+
         return res
 
     def get_obj(self, point: Point):
@@ -244,4 +245,18 @@ if __name__ == "__main__":
     # print(board.board_territory_ally)
     # print("board_territory_enemy")
     # print(board.board_territory_enemy)
+
+
+    print(board)
+
+
+    def isDone(self):
+        for i in range(13):
+            for j in range(13):
+                if self.board_obj[i][j] == 0 \
+                or self.board_territory_ally[i][j] == 0 \
+                or self.board_territory_enemy[i][j] == 0:
+                    return False
+                
+        return True
 
