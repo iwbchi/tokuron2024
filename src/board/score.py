@@ -9,7 +9,7 @@ territory = [
     [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
     [0, 0, 1, 1, 1, 0, 1, 0, 0, 0],
     [0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
-    [0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+    [0, 0, 1, 2, 0, 0, 1, 0, 0, 0],
     [0, 0, 0, 1, 0, 0, 1, 0, 0, 0],
     [0, 1, 1, 0, 0, 0, 1, 0, 0, 0],
     [0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
@@ -29,7 +29,7 @@ def make_grid_graph(territory):
                 if not (0 <= w+dx < W and 0 <= h+dy < H):
                     continue
                 tox, toy = w+dx, h+dy
-                if territory[toy][tox] == 0:
+                if territory[toy][tox] != 1:
                     graph[h * W + w].append(toy * W + tox)
 
             # ノードH*Wについて端に行けるようにする
@@ -58,9 +58,25 @@ def bfs(graph, start):
 
 if __name__ == "__main__":
     g = make_grid_graph(territory)
+    H = len(territory)
+    W = len(territory[0])
+    score = 0
     print(g)
     res = bfs(g, 80)
-    for i, r in enumerate(res[:-1]):
-        print(1 if r else 0, end=" ")
-        if i % 10 == 9:
-            print()
+    for i in range(H):
+        for j in range(W):
+            if not res[i*W+j] and territory[i][j] == 2:
+                score += 100
+            elif not res[i*W+j] and  territory[i][j] == 1:
+                score += 10
+            elif not res[i*W+j] :
+                score += 30
+            else:
+                score += 0
+    print(score)
+                
+    # for i in range(H):
+    #     for j in range(W):
+    #         print(0 if res[i*W+j] else 1 ,end = " ")
+    #     print()
+            
