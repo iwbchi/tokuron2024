@@ -26,9 +26,13 @@ class Action:
         self.direction = direction
         self.action_type = action_type
 
+    def __str__(self) -> str:
+        return f"id: {self.agent_id} dir: {self.direction} Type: {self.action_type}"
+
 
 class Actions:
     """1チームのすべてのエージェントの行動を管理する"""
+
     def __init__(self, actions: List[Action] = list()) -> None:
         self._lst: List[Action] = actions
 
@@ -40,6 +44,10 @@ class Actions:
 
     def __iter__(self) -> Iterator[Action]:
         return iter(self._lst)
+
+    def __str__(self) -> str:
+        res = [f"({ac})" for ac in self._lst]
+        return " ".join(res)
 
     def append(self, action: Action) -> None:
         self._lst.append(action)
