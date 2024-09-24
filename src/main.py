@@ -9,15 +9,19 @@ from Agent import AgentType
 from actions_api import post_actions
 
 
-TOKEN = "abc"
+TOKEN = "C"
 
 
 def main() -> None:
     id, is_first = pre_request(TOKEN)
+    res = api.api_request(id, TOKEN)
+    start_turn = 0
+    if res is not None:
+        start_turn = res[2] + 1
 
     mod = 0 if is_first else 1
 
-    for turn in range(30):
+    for turn in range(start_turn, 30):
         # TODO api_requestがboardを返すようにする
         while True:
             time.sleep(1)
@@ -36,7 +40,7 @@ def main() -> None:
             board.op_actions(actions, agent_type=AgentType.ally)
             print(board)
             print("おくったお")
-            post_actions(id, TOKEN, turn+1, actions)
+            post_actions(id, TOKEN, turn + 1, actions)
         else:
             # 相手のターンの時
             pass
