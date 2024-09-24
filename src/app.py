@@ -5,7 +5,7 @@ import numpy as np
 def api_post(
     id, token, turn, type1, type2, type3, type4, dir1, dir2, dir3, dir4
 ):
-    url = f"http://localhost:8080/matches/{id}?token={token}"  # token = 試合で自グループに割り当てられたtoken
+    url = f"http://192.168.2.61:8080/matches/{id}?token={token}"  # token = 試合で自グループに割り当てられたtoken
 
     # ヘッダーの設定
     headers = {
@@ -25,16 +25,18 @@ def api_post(
     print(data)
 
     # GETリクエストを送信
-    response = requests.post(url, headers=headers, json=data)
-
-    print(response.json())
-    print("おくったお")
+    try:
+        response = requests.post(url, headers=headers, json=data)
+        print(response.json())
+        print("おくったお")
+    except:
+        print("無理だお")
 
 
 def api_request(id, token):
 
     # API URL and token setup
-    url = f"http://localhost:8080/matches/{id}?token={token}"  # replace with actual token and match id
+    url = f"http://192.168.2.61:8080/matches/{id}?token={token}"  # replace with actual token and match id
 
     # Header setup
     headers = {

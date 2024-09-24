@@ -4,7 +4,7 @@ import numpy as np
 
 def pre_request(token) -> tuple[int, bool]:
 
-    url = f"http://localhost:8080/matches?token={token}"  # token = 試合で自グループに割り当てられたtoken
+    url = f"http://192.168.2.61:8080/matches?token={token}"  # token = 試合で自グループに割り当てられたtoken
 
     # ヘッダーの設定
     headers = {
