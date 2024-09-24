@@ -31,8 +31,9 @@ def score_calc(
 
 def montecarlo_action(board: Board, turn: int, is_first: bool) -> Actions:
     max_score = 0
-    max_actions = ""
     actions_list = board.get_actions_list()
+    max_actions = random.choice(actions_list)
+
     # partial_socre_calc = partial(
     #     score_calc,
     #     board=board,
@@ -44,7 +45,7 @@ def montecarlo_action(board: Board, turn: int, is_first: bool) -> Actions:
     #     results = list(executor.map(partial_socre_calc, actions_list))
     # max_actions = max(results)[1]
 
-    for actions in random.sample(actions_list, 900):
+    for actions in random.sample(actions_list, 1300):
         score, actions = score_calc(
             board, turn, is_first, actions_list, actions
         )
@@ -64,7 +65,7 @@ def playout(
 ) -> float:
     sum_score = 0
     for _ in range(n):
-        for i in range(turn, 30):
+        for i in range(3):
             actions = random.choice(actions_list)
             # アクションをランダムに適用する。
             if is_first:
